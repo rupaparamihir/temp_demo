@@ -1,0 +1,17 @@
+cd h:\Mihir\temp\Den\backend
+npm run dev
+
+cd h:\Mihir\temp\Den\frontend
+npm run dev
+
+clinic001, Pass@123
+
+
+------------------------------------------------------
+Legal Requirement: India’s DPDP Act (2023)
+Since you are operating in India, your application must comply with the Digital Personal Data Protection Act. If you ignore this, the fines are much higher than your hosting costs.
+    Consent: You must have a clear "Consent" checkbox for patients when the doctor creates a record.
+    Encryption: The 1MB files in Cloudflare R2 must be encrypted.
+    Audit Logs: You must track who accessed which record and when. Supabase makes this easy with "Row Level Security" (RLS).
+
+-

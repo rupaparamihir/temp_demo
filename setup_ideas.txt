@@ -1,0 +1,37 @@
+Component,Provider,Monthly Cost (INR)
+Hosting,Vercel Pro,"~₹1,700 ($20)"
+Database,Supabase Pro,"~₹2,125 ($25)"
+Storage (30GB),Cloudflare R2,~₹40 (First 10GB Free)
+Total,,"~₹3,865"
+
+Summary Checklist for You
+
+    [ ] Storage: Use Cloudflare R2 (Avoid AWS/Google for storage due to download fees).
+    [ ] Database: Use Supabase (Postgres) for metadata and search.
+    [ ] Scaling: Set up a logic to "Archive" files older than 12 months to keep your R2 bill low.
+    [ ] Search: Search the text in the DB, fetch the file from storage.
+
+
+Component,Cloudflare Service,What it does,Cost (for 100 clinics)
+Frontend,Cloudflare Pages,"Hosts your React/Vue/HTML. This is what generates the ""Link"" your clients click.",₹0 (Unlimited)
+Backend,Cloudflare Workers,"The ""Brain."" It handles the login, search logic, and talks to the database.",₹0 - ₹450 ($5)
+Database,Cloudflare D1,"A SQL database for patient names, IDs, and phone numbers.",₹0 - ₹450
+Storage,Cloudflare R2,"The ""Hard Drive"" for those 1MB history records.",~₹40 (Usage based)
+
+Since you have 1,000s of patients, you don't want the doctor to download a 1MB file every time they search.
+Search Phase: The doctor types "Rahul" in the search bar.
+The Brain (Worker): Your Cloudflare Worker searches Cloudflare D1 (the SQL database) for "Rahul." This is a tiny text search that takes 20ms.
+The Result: The doctor sees a list: Rahul Sharma (ID: 101).
+The Fetch Phase: Only when the doctor clicks "View Records," the Worker generates a special secure link to fetch the 1MB file from R2.
+
+
+BEGIN TRANSACTION;
+
+DELETE FROM appointments;
+DELETE FROM patients;
+DELETE FROM clinics;
+
+DELETE FROM sqlite_sequence WHERE name IN ('appointments', 'patients');
+
+COMMIT;
+
